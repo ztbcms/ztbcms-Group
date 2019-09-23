@@ -26,7 +26,9 @@ return array(
     //签名
     'sign' => 'd04078c5b86475cd5a0c690b9905953d',
     //依赖模块
-    'depend' => array(),
+    'depend' => array(
+        'Upload'
+    ),
     //行为注册
     'tags' => array(),
     //缓存，格式：缓存key=>array('module','model','action')

@@ -36,6 +36,7 @@ class CommonlyGroupModel extends RelationModel
         $condition['is_display'] = $data['is_display'];
         if($data['listorder']) $condition['listorder'] = $data['listorder'];
         if($data['lv']) $condition['lv'] = $data['lv']; else $condition['lv'] = '1';
+        $condition['cover_url'] = $data['cover_url'];
         return createReturn(true,$condition,'校验成功');
     }
 

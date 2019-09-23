@@ -90,7 +90,7 @@ class GroupService extends BaseService
     static function getChildList($id, $where){
         $where['parent_id'] = $id;
         $where['is_delete'] = '0';
-        $data = M('commonly_group')->field('id,listorder,title,is_display,parent_id,lv')->where($where)->order('`listorder` DESC')->select() ?: [];
+        $data = M('commonly_group')->field('id,listorder,title,is_display,parent_id,lv,cover_url')->where($where)->order('`listorder` DESC')->select() ?: [];
         $offset = 0;
         foreach($data as $key => $val){
             $child = self::getChildList($val['id'], $where);

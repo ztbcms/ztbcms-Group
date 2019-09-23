@@ -4,9 +4,13 @@
     <div id="app" style="padding: 8px;" v-cloak>
         <el-card>
             <div class="filter-container">
-                <el-input size="small" v-model="listQuery.title" placeholder="分类名称" style="width: 200px;" class="filter-item">
+                <el-input size="small" v-model="listQuery.title" placeholder="分类名称" style="width: 200px;" class="filter-item"></el-input>
 
-                </el-input>
+                <el-select v-model="listQuery.is_display" size="small"  placeholder="请选择类别">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="显示" value="1"></el-option>
+                    <el-option label="不显示" value="0"></el-option>
+                </el-select>
 
                 <el-button @click="doSearch" size="small" type="primary" icon="el-icon-search">
                     搜索
@@ -31,11 +35,21 @@
                         </div>
                     </template>
                 </el-table-column>
+
+                <el-table-column v-if="listQuery.is_cover == '1'" label="封面图" align="center" width="">
+                    <template slot-scope="{row}">
+                        <a :href="row.cover_url" target="_blank">
+                            <el-image style="width: 100px; height: 100px" :src="row.cover_url"></el-image>
+                        </a>
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="是否显示" width="150px" align="center">
                     <template slot-scope="{row}">
                         <el-switch @change="updateShow(row.id, row.is_display)" v-model="row.is_display" size="small" active-value="1" inactive-value="0"></el-switch>
                     </template>
                 </el-table-column>
+
                 <el-table-column label="排序" width="150px" align="center">
                     <template slot-scope="{row}">
                         {{ row.listorder }}
@@ -92,7 +106,8 @@
                         page: 1,
                         limit: 1000,
                         type: '{:I("get.type")}',
-                        title: ''
+                        title: '',
+                        is_cover: '{:I("get.is_cover")}'
                     }
                 },
                 watch: {},
@@ -129,6 +144,7 @@
                         var that = this;
                         var url = '{:U("Group/Group/groupDetails")}';
                         url += "&type=" + "{$_GET['type']}";
+                        url += "&is_cover=" + "{$_GET['is_cover']}";
                         if(id) url += '&id=' + id;
                         layer.open({
                             type: 2,

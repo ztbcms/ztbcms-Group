@@ -5,6 +5,20 @@
         <el-card>
 
             <div class="filter-container">
+                <el-input size="small" v-model="listQuery.title" placeholder="分类名称" style="width: 200px;" class="filter-item">
+
+                </el-input>
+
+                <el-select v-model="listQuery.is_display" size="small"  placeholder="请选择类别">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="显示" value="1"></el-option>
+                    <el-option label="不显示" value="0"></el-option>
+                </el-select>
+
+                <el-button @click="doSearch" size="small" type="primary" icon="el-icon-search">
+                    搜索
+                </el-button>
+
                 <el-button class="filter-item" style="margin-left: 10px;" size="small" type="primary" @click="getDetails()">
                     添加
                 </el-button>
@@ -21,7 +35,10 @@
                 <el-table-column label="分类名" align="left" width="">
                     <template slot-scope="{row}">
                         <div :style="'margin-left: '+(row.lv*50)+'px;'">
-                            <span style="display: inline-block;width: 100px;">{{ row.title }}</span>
+                            <span style="display: inline-block;width: 100px;float: left;margin-top: 5px;">{{ row.title }}</span>
+                            <a style="float: left;" :href="row.cover_url" target="_blank">
+                                <img v-if="row.cover_url && listQuery.is_cover == '1'" :src="row.cover_url" style="width: 30px;height: 30px;">
+                            </a>
                         </div>
                     </template>
                 </el-table-column>
@@ -81,7 +98,10 @@
                     listQuery: {
                         page: 1,
                         limit: 20,
-                        type: '{:I("get.type")}'
+                        type: '{:I("get.type")}',
+                        title: '',
+                        is_display:'',
+                        is_cover: '{:I("get.is_cover")}'
                     }
                 },
                 watch: {},
@@ -99,6 +119,11 @@
                     }
                 },
                 methods: {
+                    doSearch: function(){
+                        var that = this;
+                        that.listQuery.page = 1;
+                        that.getList();
+                    },
                     getList: function() {
                         var that = this;
                         var url = '{:U("Group/Group/groupList3")}';
@@ -113,6 +138,7 @@
                         var that = this;
                         var url = '{:U("Group/Group/groupDetails3")}';
                         url += '&type=' + that.listQuery.type;
+                        url += "&is_cover=" + "{$_GET['is_cover']}";
                         if(id) url += '&id='+id;
                         layer.open({
                             type: 2,

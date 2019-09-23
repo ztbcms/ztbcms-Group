@@ -31,7 +31,10 @@ class GroupController extends AdminBase
             if($type) $where['type'] = $type;
             $title = I('title','','trim');
             if($title) $where['title'] = ['like',['%'.$title.'%']];
+            $is_display = I('is_display','','trim');
+            if(is_numeric($is_display)) $where['is_display'] = $is_display;
             $where['is_delete'] = '0';
+            $where['parent_id'] = '0';
             $res = GroupService::getGroupList($where,'listorder desc,id desc',$page,$limit);
             $this->ajaxReturn($res);
         } else {
@@ -79,6 +82,10 @@ class GroupController extends AdminBase
         if(IS_AJAX){
             $type = I('type');
             $where = ['type' => $type];
+            $title = I('title','','trim');
+            if($title) $where['title'] = ['like',['%'.$title.'%']];
+            $is_display = I('is_display','','trim');
+            if(is_numeric($is_display)) $where['is_display'] = $is_display;
             $res = GroupService::getChildList(0, $where);
             $this->ajaxReturn(self::createReturn(true, $res, '获取成功'));
         } else {
