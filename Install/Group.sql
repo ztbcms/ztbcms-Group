@@ -16,6 +16,7 @@ CREATE TABLE `cms_commonly_group`  (
   `is_display` int(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否显示',
   `is_delete` int(1) NOT NULL COMMENT '是否删除',
   `lv` int(5) NULL DEFAULT NULL COMMENT '等级',
+  `cover_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分类缩略图',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE,
   INDEX `listorder`(`listorder`) USING BTREE,
