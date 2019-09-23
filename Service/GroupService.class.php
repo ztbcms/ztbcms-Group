@@ -78,4 +78,75 @@ class GroupService extends BaseService
         return createReturn(true,$res,'操作成功');
     }
 
+    /**
+     * 按顺序获取 (合并为一维数组)
+     * 1.等级
+     * 2.排序
+     *
+     * @param $id
+     * @param $where
+     * @return array
+     */
+    static function getChildList($id, $where){
+        $where['parent_id'] = $id;
+        $where['is_delete'] = '0';
+        $data = M('commonly_group')->field('id,listorder,title,is_display,parent_id,lv')->where($where)->order('`listorder` DESC')->select() ?: [];
+        $offset = 0;
+        foreach($data as $key => $val){
+            $child = self::getChildList($val['id'], $where);
+            $offset++;
+            if(count($child) > 0){
+                array_splice($data, $offset, 0, $child);
+                $offset += count($child);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取下级分类
+     */
+    static function getCateList($type,$id,$current_id){
+        $where = ['type' => $type, 'parent_id' => $id,'is_delete'=>'0'];
+        $data = M('commonly_group')->field('id,title,lv')->where($where)->order('`listorder` DESC')->select() ?: [];
+        if(!$id) array_unshift($data, ['id' => '0', 'title' => '顶级分类', 'lv' => 1]);
+        foreach($data as &$v){
+            if($v['id']){
+                $has_child = M('commonly_group')->where(['parent_id' => $v['id'],'is_delete'=>'0'])->count();
+                if($current_id == $id && $current_id){
+                    $has_child = 0;
+                }
+            } else {
+                $has_child = 0;
+            }
+
+            $v = [
+                'value' => $v['id'],
+                'label' => $v['title'],
+                'leaf' => $has_child > 0 ? 0 : 1,
+                'level' => $v['lv'],
+                'disabled' => ( $current_id == $id || $current_id == $v['id'] ) && $current_id || $v['lv'] >= 3
+            ];
+        }
+        return self::createReturn(true, $data);
+    }
+
+    /**
+     * @param $id
+     * @param $need_self
+     * @return array
+     */
+    static function getPid($id, $need_self = false){
+        if($need_self) $return = [$id]; else $return = [];
+        $pid = M('commonly_group')->where(['id' => $id,'is_delete'=>'0'])->getField('parent_id');
+        if($pid){
+            array_unshift($return, $pid);
+            $pid = M('commonly_group')->where(['id' => $pid,'is_delete'=>'0'])->getField('parent_id');
+            if($pid) array_unshift($return, $pid);
+        }else{
+            array_unshift($return, '0');
+        }
+        return $return;
+    }
+
 }

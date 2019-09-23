@@ -72,4 +72,58 @@ class GroupController extends AdminBase
         $this->ajaxReturn($res);
     }
 
+    /**
+     * 三级分类列表
+     */
+    public function groupList3(){
+        if(IS_AJAX){
+            $type = I('type');
+            $where = ['type' => $type];
+            $res = GroupService::getChildList(0, $where);
+            $this->ajaxReturn(self::createReturn(true, $res, '获取成功'));
+        } else {
+            $this->display();
+        }
+    }
+
+    /**
+     * 分类详情
+     */
+    public function groupDetails3(){
+        if(IS_AJAX){
+            $id = I('id','','trim');
+            $res = GroupService::getGroupDetails($id);
+            if($res['status']) $res['data']['commonlyGroupRes']['parent_id'] = GroupService::getPid($id);
+            $this->ajaxReturn($res);
+        } else {
+            $this->display();
+        }
+    }
+
+
+
+    /**
+     * 获取下级分类
+     */
+    public function getCateList(){
+        $type = I('type');
+        $id = I('id');
+        $current_id = I('current_id');
+        $res = GroupService::getCateList($type,$id,$current_id);
+        $this->ajaxReturn($res);
+    }
+
+    /**
+     * 添加/编辑三级分类
+     */
+    public function addEditCate(){
+        $data = I('post.');
+        $data['parent_id'] = end($data['parent_id']);
+        $commonlyGroupTable = new CommonlyGroupModel();
+        $lv = $commonlyGroupTable->where(['id' => $data['parent_id']])->getField('lv');
+        $data['lv'] = $lv+1;
+        $res = GroupService::addEditGroup($data);
+        $this->ajaxReturn($res);
+    }
+
 }
