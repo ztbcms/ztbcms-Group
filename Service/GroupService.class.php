@@ -159,7 +159,7 @@ class GroupService extends BaseService
         $result = [];
         $cates = M('commonly_group')->where(['type' => $type, 'lv' => $lv, 'is_delete' => 0, 'is_display' => 1])->order('lv asc, listorder desc, id asc')->field("id,title,lv,cover_url")->select();
         foreach ($cates as $cate) {
-            $cate['children'] = self::getGroupTree($type, $lv + 1);
+            $cate['children'] = self::getGroupTreeByType($type, $lv + 1);
             $result [] = $cate;
         }
 
