@@ -21,7 +21,7 @@ return array(
         //备注
         "remark" => "",
         //默认参数
-        "parameter" => "type=default",
+        "parameter" => "",
         //子菜单列表
         "child" => array(
             array(
@@ -29,12 +29,14 @@ return array(
                 "type" => 1,
                 "status" => 1,
                 "name" => "一级分类",
+                "parameter" => "type=default1&is_cover=1",
             ),
             array(
                 "route" => "Group/Group/groupList3",
                 "type" => 1,
                 "status" => 1,
                 "name" => "三级分类",
+                "parameter" => "type=default2&is_cover=1",
             )
         ),
     ),

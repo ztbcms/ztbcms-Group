@@ -1,6 +1,3 @@
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for ztb_commonly_group
 -- ----------------------------
@@ -24,8 +21,6 @@ CREATE TABLE `cms_commonly_group`  (
   INDEX `is_delete`(`is_delete`) USING BTREE,
   INDEX `parent_id`(`parent_id`) USING BTREE,
   INDEX `type`(`type`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
+) ENGINE = MyISAM  CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 
