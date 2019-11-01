@@ -152,14 +152,21 @@ class GroupService extends BaseService
     /**
      * 获取分类的树状结构分类列表
      * @param $type
+     * @param int $pid 父ID
      * @param int $lv
      * @return array
      */
-    static function getGroupTreeByType($type, $lv = 1){
+    static function getGroupTreeByType($type, $pid, $lv = 1){
         $result = [];
-        $cates = M('commonly_group')->where(['type' => $type, 'lv' => $lv, 'is_delete' => 0, 'is_display' => 1])->order('lv asc, listorder desc, id asc')->field("id,title,lv,cover_url")->select();
+        $cates = M('commonly_group')->where([
+            'type' => $type,
+            'parent_id' => $pid,
+            'lv' => $lv,
+            'is_delete' => 0,
+            'is_display' => 1
+        ])->order('lv asc, listorder desc, id asc')->field("id,title,lv,cover_url")->select();
         foreach ($cates as $cate) {
-            $cate['children'] = self::getGroupTreeByType($type, $lv + 1);
+            $cate['children'] = self::getGroupTreeByType($type, $cate['id'], $lv + 1);
             $result [] = $cate;
         }
 
